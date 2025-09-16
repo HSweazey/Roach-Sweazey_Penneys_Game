@@ -1,6 +1,5 @@
-# sweazey_main.py (Corrected)
-from sweazey_helpers import decks_loaded
-from sweazey_db import setup_database, check_length, export_decks_and_clear_db, insert_decks
+from db_approach.db_helpers import decks_loaded
+from db_approach.db_setup import setup_database, check_length, export_decks_and_clear_db, insert_decks
 
 # Setup the database if it doesn't exist
 setup_database()

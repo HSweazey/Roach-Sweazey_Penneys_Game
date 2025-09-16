@@ -1,5 +1,4 @@
-# roach_main.py
-from roach_generation import main as generate_main
+from array_approach.array_generation import main as generate_main
 import os
 
 # --- Helper ---
@@ -21,8 +20,8 @@ if gen_choice.upper() == 'Y':
         batch_str = input('Batch size (default 10000)? ')
         batch = int(batch_str) if batch_str.strip() else 10000
 
-        output_dir = input('Output directory (default ./data/decks)? ')
-        output_dir = output_dir.strip() or "./data/decks"
+        output_dir = input('Output directory (default ./data/array_decks)? ')
+        output_dir = output_dir.strip() or "./data/array_decks"
 
         # Run the generator
         generate_main(total, batch, output_dir)
