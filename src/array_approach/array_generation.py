@@ -5,7 +5,7 @@ import argparse
 import numpy as np
 import random
 import csv 
-from array_helpers import generate_deck
+from src.array_approach.array_helpers import generate_deck
 
 def set_random_seed(seed: int = None) -> None:
     '''

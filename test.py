@@ -1,29 +1,28 @@
-import os
+# --- Standard Library Imports ---
 import argparse
+import os
 
-# --- Array approach imports ---
+# --- Local Application Imports ---
 from src.array_approach.array_generation import main as array_generate_main
-
-# --- Database approach imports ---
-from src.db_approach.db_setup import setup_database, check_length, export_decks_and_clear_db, insert_decks
 from src.db_approach.db_helpers import decks_loaded as db_decks_exported
+from src.db_approach.db_setup import (check_length, export_decks_and_clear_db,
+                                      insert_decks, setup_database)
 
-# --- Helper Init Functions ---
+
+# --- Helper Functions ---
 
 def array_decks_exported(output_dir="./data/array_decks"):
     """
     Counts how many .npy deck files exist in the array export folder.
     """
-
     if not os.path.exists(output_dir):
         return 0
-    return (10000*len([f for f in os.listdir(output_dir) if f.endswith(".npy")]))
+    return (10000 * len([f for f in os.listdir(output_dir) if f.endswith(".npy")]))
 
 def run_array_generation(num_to_generate):
     """
     Handles the execution for the array generation strategy.
     """
-
     try:
         batch = 10000
         output_dir_array = "./data/array_decks"
@@ -40,7 +39,6 @@ def run_db_generation(num_to_generate):
     """
     Handles the execution for the database generation strategy.
     """
-    
     print("\n>>> Running Database Generation...")
     insert_decks(num_to_generate)
     print(f">>> {num_to_generate} decks inserted into the database.")
@@ -51,6 +49,7 @@ def run_db_generation(num_to_generate):
     print(">>> Database export complete.")
     return True
 
+
 # --- Main Program Logic ---
 
 if __name__ == "__main__":
@@ -59,8 +58,8 @@ if __name__ == "__main__":
         description="Generate decks using the database (default) or array strategy."
     )
     parser.add_argument(
-        '--array', 
-        action='store_true', 
+        '--array',
+        action='store_true',
         help='Use the array generation strategy instead of the default.'
     )
     args = parser.parse_args()
@@ -80,7 +79,7 @@ if __name__ == "__main__":
         print("--- Current Status ---")
         print(f'Array Approach: {array_decks_exported()} deck(s) exported.')
         print(f'DB Approach:    {db_decks_exported()} deck(s) exported.')
-    
+
         db_pending_count = check_length()
         if db_pending_count > 0:
             print(f'DB Approach:    {db_pending_count} deck(s) in the database pending export. Exporting now...')

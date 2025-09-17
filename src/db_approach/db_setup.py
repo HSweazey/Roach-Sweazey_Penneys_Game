@@ -1,13 +1,20 @@
-import sqlite3
-import numpy as np
-import random
-from typing import List
+# --- Standard Library Imports ---
 import os
-from db_generation import Deck, get_next_seed
-from db_helpers import debugger, string_to_binary
-import time
-import psutil
+import random
+import sqlite3
 import sys
+import time
+from typing import List
+
+# --- Third-Party Imports ---
+import numpy as np
+import psutil
+
+# --- Local Application Imports ---
+from src.db_approach.db_generation import Deck, get_next_seed
+from src.db_approach.db_helpers import debugger, string_to_binary
+
+# (rest of the file is unchanged, but an explicit "from typing import List" was added)
 
 DB_PATH = "decks.db"
 
