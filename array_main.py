@@ -1,8 +1,8 @@
-from array_approach.array_generation import main as generate_main
+from src.array_approach.array_generation import main as generate_main
 import os
 
 # --- Helper ---
-def decks_exported(output_dir="./data/decks"):
+def decks_exported(output_dir="./data/array_decks"):
     """Count how many decks files exist in the export folder."""
     if not os.path.exists(output_dir):
         return 0
@@ -30,5 +30,3 @@ if gen_choice.upper() == 'Y':
 
     except ValueError:
         print("Invalid input. Please enter numbers for total decks and batch size.")
-
-# testing testing 

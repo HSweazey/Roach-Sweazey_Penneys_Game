@@ -5,7 +5,7 @@ import argparse
 import numpy as np
 import random
 import csv 
-from array_helpers import generate_deck
+from src.array_approach.array_helpers import generate_deck
 
 def set_random_seed(seed: int = None) -> None:
     '''
@@ -95,9 +95,6 @@ def main(total_decks: int, batch_size: int, output_dir: str, log_file: str = "ge
     print(f" Total storage size: {size_mb:.2f} MB")
     print(f" Runtime: {elapsed:.2f} seconds")
     print(f" Peak memory usage: {rss_mb:.2f} MB")
-
-    # log the run
-    log_run(log_file, n_files, total_saved, elapsed, size_mb)
 
 
 

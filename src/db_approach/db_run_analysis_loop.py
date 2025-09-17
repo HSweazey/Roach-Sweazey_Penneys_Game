@@ -13,8 +13,8 @@ def main_program_logic(decks_to_generate: int):
     It generates a specified number of decks and immediately exports them.
     """
     # Import necessary functions from your project files
-    from db_approach.db_helpers import decks_loaded
-    from db_approach.db_setup import setup_database, check_length, export_decks_and_clear_db, insert_decks
+    from db_helpers import decks_loaded
+    from db_setup import setup_database, check_length, export_decks_and_clear_db, insert_decks
 
     # Setup the database if it doesn't exist
     setup_database()
@@ -30,8 +30,8 @@ def main_program_logic(decks_to_generate: int):
 if __name__ == "__main__":
     # --- Configuration ---
     TOTAL_ITERATIONS = 10
-    DECKS_PER_ITERATION = 2000000  # Number of decks to generate in each loop
-    CSV_FILENAME = 'sw_ON_r_performance_stats.csv'
+    DECKS_PER_ITERATION = 1000000  # Number of decks to generate in each loop
+    CSV_FILENAME = './data/comparisons/db_performance_stats.csv'
 
     print(f"Starting performance test: {TOTAL_ITERATIONS} iterations of {DECKS_PER_ITERATION} decks each.")
     print(f"Results will be saved to '{CSV_FILENAME}'")
@@ -72,7 +72,7 @@ if __name__ == "__main__":
             peak_mem_mb = peak_mem / 1024**2
             
             # Get the cumulative total of decks from the helper function
-            from db_approach.db_helpers import decks_loaded
+            from db_helpers import decks_loaded
             total_decks = decks_loaded()
 
             # --- 5. Print to Console and Save to CSV ---

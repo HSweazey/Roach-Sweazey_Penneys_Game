@@ -1,4 +1,3 @@
-# sweazey_generation.py (Corrected)
 import os
 import collections
 import random
@@ -39,7 +38,7 @@ class Deck:
     def __str__(self) -> str:
         return f"Deck with {len(self)} cards. Top card: {self.cards[0] if self.cards else 'N/A'}"
 
-def get_next_seed(data_folder='./data/sweazey_decks/'):
+def get_next_seed(data_folder='./data/db_decks/'):
     """
     Finds the latest file in a directory based on a specific naming
     convention, retrieves the last random seed, and returns the next

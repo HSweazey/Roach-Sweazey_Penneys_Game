@@ -18,7 +18,7 @@ gen_choice = input('Generate new decks? (Y/N) ')
 if gen_choice.upper() == 'Y':
     try:
         num_decks_str = input('How many decks to add? ')
-        num_decks = int(num_decks_str) # <-- FIX: Convert string to integer
+        num_decks = int(num_decks_str)
         insert_decks(num_decks)
         
         # Ask to export the newly created decks

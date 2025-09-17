@@ -1,15 +1,13 @@
-# sweazey_db.py (Corrected)
 import sqlite3
 import numpy as np
 import random
 from typing import List
 import os
-from sweazey_generation import Deck, get_next_seed
-from sweazey_helpers import debugger, string_to_binary
+from src.db_approach.db_generation import Deck, get_next_seed
+from src.db_approach.db_helpers import debugger, string_to_binary
 
 DB_PATH = "decks.db"
 
-@debugger
 def setup_database():
     """Creates the database and the 'decks' table if they don't exist."""
     with sqlite3.connect(DB_PATH) as conn:
@@ -24,7 +22,6 @@ def setup_database():
         conn.commit()
     print("Database setup complete.")
 
-@debugger
 def check_length():
     """Checks if there are unloaded decks still present"""
     with sqlite3.connect(DB_PATH) as conn:
@@ -81,7 +78,7 @@ def export_decks_and_clear_db(batch_size: int = 10000):
             decks_as_lists = [string_to_binary(row[0]) for row in results]
             numpy_array = np.array(decks_as_lists, dtype=np.int8)
             end_num = len(results)
-            filename = f"./data/sweazey_decks/decks_{end_num}_seed{seed}.npy"
+            filename = f"./data/db_decks/decks_{end_num}_seed{seed}.npy"
             print(f"  -> Writing array with shape {numpy_array.shape} to '{filename}'...")
             np.save(filename, numpy_array)
             offset += batch_size
