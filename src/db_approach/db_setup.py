@@ -3,8 +3,11 @@ import numpy as np
 import random
 from typing import List
 import os
-from src.db_approach.db_generation import Deck, get_next_seed
-from src.db_approach.db_helpers import debugger, string_to_binary
+from db_generation import Deck, get_next_seed
+from db_helpers import debugger, string_to_binary
+import time
+import psutil
+import sys
 
 DB_PATH = "decks.db"
 
@@ -34,11 +37,18 @@ def insert_decks(num_to_add: int):
     Generates and inserts new decks into the database, incrementing the
     random seed for each batch of 10,000 decks.
     """
-    print(f"Generating and inserting {num_to_add} new decks...")
+    print(f"[START] Generating {num_to_add} decks in {num_to_add // 10000} batches ...")
     start_seed = get_next_seed()
     current_seed = start_seed
     decks_generated = 0
     batch_size = 10000
+    
+    start_time = time.time()
+    total_saved = 0
+    memory_used = 0
+    n_files = 0
+
+    size_mb = memory_used / (1024**2)
 
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
@@ -53,7 +63,23 @@ def insert_decks(num_to_add: int):
             conn.commit()
             decks_generated += num_this_batch
             current_seed += 1
-    print(f"Successfully inserted {decks_generated} decks.")
+
+            total_saved += len(decks_to_insert)
+            memory_used += sys.getsizeof(decks_to_insert)
+            n_files += 1
+    
+    elapsed = time.time() - start_time
+    process = psutil.Process(os.getpid())
+    rss_mb = process.memory_info().rss / (1024 ** 2)
+    size_mb = memory_used / (1024**2)
+
+    print("\n[SUMMARY]")
+    print(f" Total decks generated: {total_saved}")
+    print(f" Number of files: {n_files}")
+    print(f" Total storage size: {size_mb:.2f} MB")
+    print(f" Runtime: {elapsed:.2f} seconds")
+    print(f" Peak memory usage: {rss_mb:.2f} MB")
+    print(f"Successfully generated {decks_generated} decks.\n")
 
 def export_decks_and_clear_db(batch_size: int = 10000):
     """
