@@ -1,27 +1,17 @@
-# --- Standard Library Imports ---
 import argparse
 import os
-
-# --- Local Application Imports ---
 from src.array_approach.array_generation import main as array_generate_main
 from src.db_approach.db_helpers import decks_loaded as db_decks_exported
 from src.db_approach.db_setup import (check_length, export_decks_and_clear_db,
                                       insert_decks, setup_database)
+from src.array_approach.array_helpers import array_decks_loaded
 
 
 # --- Helper Functions ---
 
-def array_decks_exported(output_dir="./data/array_decks"):
+def run_array_generation(num_to_generate) -> bool:
     """
-    Counts how many .npy deck files exist in the array export folder.
-    """
-    if not os.path.exists(output_dir):
-        return 0
-    return (10000 * len([f for f in os.listdir(output_dir) if f.endswith(".npy")]))
-
-def run_array_generation(num_to_generate):
-    """
-    Handles the execution for the array generation strategy.
+    Handles the execution for the array approach.
     """
     try:
         batch = 10000
@@ -35,25 +25,23 @@ def run_array_generation(num_to_generate):
         print("\nAn unexpected error occurred during array generation.")
         return False
 
-def run_db_generation(num_to_generate):
+def run_db_generation(num_to_generate) -> bool:
     """
-    Handles the execution for the database generation strategy.
+    Handles the execution for the database approach.
     """
     print("\n>>> Running Database Generation...")
     insert_decks(num_to_generate)
     print(f">>> {num_to_generate} decks inserted into the database.")
 
-    # Automatically export the newly created decks
     print(">>> Exporting newly added decks...")
     export_decks_and_clear_db()
     print(">>> Database export complete.")
     return True
 
 
-# --- Main Program Logic ---
+# --- Main ---
 
 if __name__ == "__main__":
-    # Setup command-line argument parsing. This must be done first.
     parser = argparse.ArgumentParser(
         description="Generate decks using the database (default) or array strategy."
     )
@@ -64,20 +52,18 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    # --- Conditional Setup and Status Report ---
+    # --- Setup/Status ---
     if args.array:
-        # If using the array approach, only show array status and skip all DB operations.
         print("--- Current Status (Array-Only Mode) ---")
-        print(f'Array Approach: {array_decks_exported()} deck(s) exported.')
+        print(f'Array Approach: {array_decks_loaded()} deck(s) exported.')
         print("Database setup will be skipped.")
     else:
-        # If using the default DB approach, set it up and show full status.
         print("Setting up database...")
         setup_database()
         print("-" * 30)
 
         print("--- Current Status ---")
-        print(f'Array Approach: {array_decks_exported()} deck(s) exported.')
+        print(f'Array Approach: {array_decks_loaded()} deck(s) exported.')
         print(f'DB Approach:    {db_decks_exported()} deck(s) exported.')
 
         db_pending_count = check_length()
@@ -105,7 +91,7 @@ if __name__ == "__main__":
     # --- Final Status Report ---
     print("\n" + "-" * 30)
     print("--- Final Status ---")
-    print(f'There are now {array_decks_exported()} total array deck(s) exported.')
+    print(f'There are now {array_decks_loaded()} total array deck(s) exported.')
     # Only report on the DB status if that strategy was used
     if not args.array:
         print(f'There are now {db_decks_exported()} total DB deck(s) exported.')

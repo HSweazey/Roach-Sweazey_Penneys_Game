@@ -1,25 +1,22 @@
-# --- Standard Library Imports ---
 import os
 import random
 import sqlite3
 import sys
 import time
 from typing import List
-
-# --- Third-Party Imports ---
 import numpy as np
 import psutil
 
-# --- Local Application Imports ---
+# --- My Imports ---
 from src.db_approach.db_generation import Deck, get_next_seed
 from src.db_approach.db_helpers import debugger, string_to_binary
 
-# (rest of the file is unchanged, but an explicit "from typing import List" was added)
-
 DB_PATH = "decks.db"
 
-def setup_database():
-    """Creates the database and the 'decks' table if they don't exist."""
+def setup_database() -> None:
+    """
+    Creates the database and the 'decks' table if they don't exist.
+    """
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
         cursor.execute("""
@@ -32,16 +29,18 @@ def setup_database():
         conn.commit()
     print("Database setup complete.")
 
-def check_length():
-    """Checks if there are unloaded decks still present"""
+def check_length() -> int:
+    """
+    Returns number of decks in db
+    """
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
         total_decks = cursor.execute("SELECT COUNT(*) FROM decks").fetchone()[0]
     return total_decks
 
-def insert_decks(num_to_add: int):
+def insert_decks(num_to_add: int) -> None:
     """
-    Generates and inserts new decks into the database, incrementing the
+    Generates and inserts new decks, incrementing
     random seed for each batch of 10,000 decks.
     """
     print(f"[START] Generating {num_to_add} decks in {num_to_add // 10000} batches ...")
@@ -88,7 +87,7 @@ def insert_decks(num_to_add: int):
     print(f" Peak memory usage: {rss_mb:.2f} MB")
     print(f"Successfully generated {decks_generated} decks.\n")
 
-def export_decks_and_clear_db(batch_size: int = 10000):
+def export_decks_and_clear_db(batch_size: int = 10000) -> None:
     """
     Exports decks from the database, clears the table, and then deletes the .db file
     to ensure the file size is reset.
@@ -117,14 +116,14 @@ def export_decks_and_clear_db(batch_size: int = 10000):
             offset += batch_size
             seed += 1
         
-        # The 'DELETE' command empties the table.
+        # empties table
         print("\nExport successful. Clearing decks table...")
         cursor.execute("DELETE FROM decks")
         conn.commit()
         
     print("Workflow complete.")
 
-    # --- NEW STEP: Delete the database file itself ---
+    # delete db to preserve size
     try:
         os.remove(DB_PATH)
         print(f"Database file '{DB_PATH}' successfully deleted to manage size.")

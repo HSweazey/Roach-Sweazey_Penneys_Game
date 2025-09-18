@@ -4,12 +4,12 @@ import psutil
 import argparse
 import numpy as np
 import random
-import csv 
+import csv
 from src.array_approach.array_helpers import generate_deck
 
 def set_random_seed(seed: int = None) -> None:
     '''
-    set random seed for reproducibility
+    Sets random seed for reproducibility
     '''
 
     random.seed(seed)
@@ -18,7 +18,7 @@ def set_random_seed(seed: int = None) -> None:
 
 def generate_n_decks(n: int, seed: int = None) -> np.ndarray:
     '''
-    generate n decks of cards as a numpy array
+    Generates n decks of cards as a numpy array
     shape should be (n, 52)
     '''
 
@@ -30,14 +30,14 @@ def generate_n_decks(n: int, seed: int = None) -> np.ndarray:
     return np.array(decks)
 
 
-def save_decks(batch: np.ndarray, seed: int, output_dir: str):
+def save_decks(batch: np.ndarray, seed: int, output_dir: str) -> np.ndarray:
     '''
-    save decks (from generate n decks) to .npy file
-    filename format: decks_00001.npy ... 
-    ''' 
+    Saves decks (from generate n decks) to .npy file
+    filename format: 10000_decks_seed00001.npy ...
+    '''
 
     os.makedirs(output_dir, exist_ok=True)
-    filename = os.path.join(output_dir, f'decks_seed{seed}.npy')
+    filename = os.path.join(output_dir, f'decks_{batch.shape[0]}_seed{seed}.npy')
 
     if os.path.exists(filename):
         print(f"[INFO] Loading existing decks from {filename}")
@@ -48,25 +48,23 @@ def save_decks(batch: np.ndarray, seed: int, output_dir: str):
     return batch
 
 
-# track runtimes and storage space in a csv 
 
 def log_run(logfile: str, n_files: int, n_decks: int, runtime: float, space_mb: float):
     '''
-    
+    Track deck generations and storage space in a csv.
     '''
     file_exists = os.path.isfile(logfile)
 
-    with open(logfile, 'a', newline = '') as csvfile: 
+    with open(logfile, 'a', newline = '') as csvfile:
         writer = csv.writer(csvfile)
         if not file_exists:
             writer.writerow(['num_files', 'decks_per', 'time_s', 'space_mb'])
         writer.writerow([n_files, n_decks, f'{runtime:.4f}', f'{space_mb:.4f}'])
 
 
-# main function 
 
 def main(total_decks: int, batch_size: int, output_dir: str, log_file: str = "generation_log.csv"):
-    print(f"[START] Generating {total_decks} decks in {total_decks // batch_size} batches ...")
+    print(f"[START] Generating {total_decks} decks...")
     start_time = time.time()
 
     rng = np.random.default_rng()
@@ -74,7 +72,12 @@ def main(total_decks: int, batch_size: int, output_dir: str, log_file: str = "ge
     memory_used = 0
     n_files = 0
 
-    for _ in range(total_decks // batch_size):
+    # Calculate number of full batches and the remainder
+    num_full_batches = total_decks // batch_size
+    remainder_decks = total_decks % batch_size
+
+    # Process full batches
+    for _ in range(num_full_batches):
         seed = int(rng.integers(0, 2**32 - 1))
         batch = generate_n_decks(batch_size, seed)
         saved = save_decks(batch, seed, output_dir)
@@ -82,6 +85,17 @@ def main(total_decks: int, batch_size: int, output_dir: str, log_file: str = "ge
         total_saved += saved.shape[0]
         memory_used += saved.nbytes
         n_files += 1
+    
+    # Process the remainder if it exists
+    if remainder_decks > 0:
+        seed = int(rng.integers(0, 2**32 - 1))
+        batch = generate_n_decks(remainder_decks, seed)
+        saved = save_decks(batch, seed, output_dir)
+
+        total_saved += saved.shape[0]
+        memory_used += saved.nbytes
+        n_files += 1
+
 
     elapsed = time.time() - start_time
     process = psutil.Process(os.getpid())

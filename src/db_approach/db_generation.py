@@ -6,7 +6,7 @@ from typing import Dict, List, Optional
 
 class Deck:
     """
-    A class representing a deck of cards, refined for database interaction.
+    Class representing a deck of cards, refined for database interaction.
     """
     def __init__(self, composition: Optional[Dict[str, int]] = None, shuffle: bool = True):
         if composition is None:
@@ -38,11 +38,9 @@ class Deck:
     def __str__(self) -> str:
         return f"Deck with {len(self)} cards. Top card: {self.cards[0] if self.cards else 'N/A'}"
 
-def get_next_seed(data_folder='./data/db_decks/'):
+def get_next_seed(data_folder='./data/db_decks/') -> int:
     """
-    Finds the latest file in a directory based on a specific naming
-    convention, retrieves the last random seed, and returns the next
-    sequential seed value.
+    Finds the last used seed from specific file naming convention.
     """
     filename_pattern = re.compile(r'^decks_\d+_seed(\d+)\.npy$')
     last_seed = 0
