@@ -7,7 +7,7 @@ In our second approach we used a database to manage generation and storage inste
 
 ## Selection and Reasoning 
 
-Based on the runtime and memory results (stored in our "figures" folder), the database approach proved to be the better method due to its conistent memory usage and stability. We have chosen to prioritize effeciency in managing resources when working with large numbers of decks over computational speed. 
+Based on the runtime and memory results (stored in our "figures" folder), the database approach proved to be the better method due to its conistent memory usage and stability. We have chosen to prioritize effeciency in managing resources when working with large numbers of decks over computational speed. As of now, we have preserved both methods, wih the user being able to use our array-based approach when using the argument --array in conjunction with running the test.py file.
 
 ### Figures
 
