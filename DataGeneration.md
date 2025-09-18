@@ -14,5 +14,8 @@ Based on the runtime and memory results (stored in our "figures" folder), the da
 Here are two figures that summarize our results:
 
 ![Array vs Database: Computer A](figures/performance_comparison_A.png)
+*Figure 1: Runtime and memory results for Computer A*
+
 
 ![Array vs Database: Computer B](figures/performance_comparison_B.png)
+*Figure 2: Runtime and memory results for Computer B*
