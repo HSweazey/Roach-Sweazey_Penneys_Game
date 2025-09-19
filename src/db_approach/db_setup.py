@@ -27,7 +27,7 @@ def setup_database() -> None:
             )
         """)
         conn.commit()
-    print("Database setup complete.")
+    #print("Database setup complete.")
 
 def check_length() -> int:
     """
@@ -62,7 +62,7 @@ def insert_decks(num_to_add: int) -> None:
             num_this_batch = min(batch_size, num_to_add - decks_generated)
             if num_this_batch <= 0:
                 break
-            print(f"  -> Generating batch of {num_this_batch} decks with seed {current_seed}...")
+            #print(f"  -> Generating batch of {num_this_batch} decks with seed {current_seed}...")
             random.seed(current_seed)
             decks_to_insert = [(Deck().get_sequence_string(),) for _ in range(num_this_batch)]
             cursor.executemany("INSERT INTO decks (sequence) VALUES (?)", decks_to_insert)
@@ -82,7 +82,6 @@ def insert_decks(num_to_add: int) -> None:
     print("\n[SUMMARY]")
     print(f" Total decks generated: {total_saved}")
     print(f" Number of files: {n_files}")
-    print(f" Total storage size: {size_mb:.2f} MB")
     print(f" Runtime: {elapsed:.2f} seconds")
     print(f" Peak memory usage: {rss_mb:.2f} MB")
     print(f"Successfully generated {decks_generated} decks.\n")
@@ -92,7 +91,7 @@ def export_decks_and_clear_db(batch_size: int = 10000) -> None:
     Exports decks from the database, clears the table, and then deletes the .db file
     to ensure the file size is reset.
     """
-    print(f"Exporting decks to .npy files with a batch size of {batch_size}...")
+    #print(f"Exporting decks to .npy files with a batch size of {batch_size}...")
     seed = get_next_seed()
     
     with sqlite3.connect(DB_PATH) as conn:
@@ -111,21 +110,21 @@ def export_decks_and_clear_db(batch_size: int = 10000) -> None:
             numpy_array = np.array(decks_as_lists, dtype=np.int8)
             end_num = len(results)
             filename = f"./data/db_decks/decks_{end_num}_seed{seed}.npy"
-            print(f"  -> Writing array with shape {numpy_array.shape} to '{filename}'...")
+            # print(f"  -> Writing array with shape {numpy_array.shape} to '{filename}'...")
             np.save(filename, numpy_array)
             offset += batch_size
             seed += 1
         
         # empties table
-        print("\nExport successful. Clearing decks table...")
+        #print("\nExport successful. Clearing decks table...")
         cursor.execute("DELETE FROM decks")
         conn.commit()
         
-    print("Workflow complete.")
+    #print("Workflow complete.")
 
     # delete db to preserve size
     try:
         os.remove(DB_PATH)
-        print(f"Database file '{DB_PATH}' successfully deleted to manage size.")
+        #print(f"Database file '{DB_PATH}' successfully deleted to manage size.\n")
     except OSError as e:
         print(f"Error deleting file {DB_PATH}: {e}")

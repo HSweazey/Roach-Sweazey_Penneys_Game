@@ -44,7 +44,7 @@ def save_decks(batch: np.ndarray, seed: int, output_dir: str) -> np.ndarray:
         return np.load(filename)
 
     np.save(filename, batch)
-    print(f'saved {batch.shape[0]} decks to {filename}')
+    # print(f'saved {batch.shape[0]} decks to {filename}')
     return batch
 
 
@@ -106,7 +106,6 @@ def main(total_decks: int, batch_size: int, output_dir: str, log_file: str = "ge
     print("\n[SUMMARY]")
     print(f" Total decks generated: {total_saved}")
     print(f" Number of files: {n_files}")
-    print(f" Total storage size: {size_mb:.2f} MB")
     print(f" Runtime: {elapsed:.2f} seconds")
     print(f" Peak memory usage: {rss_mb:.2f} MB")
 
@@ -120,8 +119,6 @@ if __name__ == "__main__":
                         help="Number of decks per batch")
     parser.add_argument("--output_dir", type=str, default="./data/decks",
                         help="Directory to save generated decks")
-    parser.add_argument("--log_file", type=str, default="generation_log.csv",
-                        help="CSV file to store runtime/storage stats")
 
     args = parser.parse_args()
     main(args.total_decks, args.batch_size, args.output_dir, args.log_file)

@@ -5,13 +5,16 @@ In our array-based approach, decks were generated in memory and exported directl
 
 In our second approach we used a database to manage generation and storage instead of keeping everything in memory. In this approach, decks were inserted into a SQLite database and exported in batches. This added a small amount of runtime (additonal 2 seconds on average), but was consistently more memory efficient, remaining around 11 MB on all tests regardless of scale. 
 
+## Testing and Performance 
+To compare the array-based and database generation methods, we created run_tests.py. During excecution the script tracks runtime, CPU usage, and peak memory consumption. Runtime is tracked in seconds using python's high-precision timers, which measure the wall-clock time between the start and end of our data generation. CPU usage is monitored through the psutil library, which records the percentage of total processing power used by the script. Storage is measured by monitoring peak memory allocations through python's tracemalloc module, which records the maximum memory held during excecution. 
+
 ## Selection and Reasoning 
 
-Based on the runtime and memory results (stored in our "figures" folder), the database approach proved to be the better method due to its conistent memory usage and stability. We have chosen to prioritize effeciency in managing resources when working with large numbers of decks over computational speed. As of now, we have preserved both methods, wih the user being able to use our array-based approach when using the argument --array in conjunction with running the test.py file.
+Based on the runtime and memory results (stored in our "figures" folder), the database approach proved to be the better method due to its conistent memory usage and stability. We have chosen to prioritize effeciency in managing resources when working with large numbers of decks over computational speed. 
 
 ### Figures
 
-Here are two figures that summarize our results (data collected from 10 iterations of generating and saving 1000000 files):
+Here are two figures that summarize our results:
 
 ![Array vs Database: Computer A](figures/performance_comparison_A.png)
 *Figure 1: Runtime and memory results for Computer A*
@@ -19,3 +22,14 @@ Here are two figures that summarize our results (data collected from 10 iteratio
 
 ![Array vs Database: Computer B](figures/performance_comparison_B.png)
 *Figure 2: Runtime and memory results for Computer B*
+
+## Summary Table:
+## Results from Most Recent Run (2025-09-19 14:48:56)
+
+The table below shows the **average results** from the most recent test. The test was conducted over **5 iterations**, with **1,000,000 decks** generated per iteration. There are more detailed graphs in the figures folder.
+
+| Metric             |   Database Method |   Array Method |
+|:-------------------|------------------:|---------------:|
+| Execution Time (s) |             30.95 |          31.2  |
+| Peak Memory (MB)   |             11.27 |          12.86 |
+| CPU Usage (%)      |             99.5  |          99.84 |
