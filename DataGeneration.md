@@ -11,7 +11,7 @@ Based on the runtime and memory results (stored in our "figures" folder), the da
 
 ### Figures
 
-Here are two figures that summarize our results:
+Here are two figures that summarize our results (data collected from 10 iterations of generating and saving 1000000 files):
 
 ![Array vs Database: Computer A](figures/performance_comparison_A.png)
 *Figure 1: Runtime and memory results for Computer A*
