@@ -46,8 +46,8 @@ def main():
     print(f"\nSuccessfully prepared {len(decks_to_test)} decks for testing.")
 
     performance_results = [
-        run_and_profile('Approach 1', decks_to_test, PATTERN_LEN, OUTPUT_DIR),
-        run_and_profile('Approach 2', decks_to_test, PATTERN_LEN, OUTPUT_DIR)
+        run_and_profile('Approach 1 (pandas_in_memory)', decks_to_test, PATTERN_LEN, OUTPUT_DIR),
+        run_and_profile('Approach 2 (sqlite_temp_db)', decks_to_test, PATTERN_LEN, OUTPUT_DIR)
     ]
 
     perf_df = pd.DataFrame(performance_results)
