@@ -8,12 +8,13 @@ import pandas as pd
 import sqlite3
 from datetime import datetime
 
-# Import from the approach files
 from .db_processingR import init_aggregate_df as init_df_R, process_single_batch_array as process_R
 from .db_processingH import init_temp_db, process_single_batch_array_db as process_H, export_db_to_csv
 
 def update_markdown_summary(md_path: str, perf_df: pd.DataFrame, df_r: pd.DataFrame, df_h: pd.DataFrame):
-    """Updates a Markdown file by replacing only the last test run summary."""
+    """
+    Updates MD file by replacing only the last test run summary.
+    """
     print(f"Updating test summary in: {md_path}")
     df_r_md, df_h_md = df_r.copy(), df_h.copy()
     for col in ['p1', 'p2']:
@@ -37,7 +38,9 @@ def update_markdown_summary(md_path: str, perf_df: pd.DataFrame, df_r: pd.DataFr
         f.write(base_content + "".join(new_summary_parts))
 
 def run_and_profile(approach_name: str, decks: np.ndarray, pattern_len: int, output_dir: str) -> dict:
-    """Runs and profiles a given processing approach."""
+    """
+    Runs and tracks a given processing approach.
+    """
     print(f"\n--- Running Test for: {approach_name} ---")
     if approach_name == 'Approach 1 (pandas_in_memory)':
         output_csv = os.path.join(output_dir, 'approach1_scores.csv')

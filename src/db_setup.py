@@ -8,9 +8,9 @@ import numpy as np
 import psutil
 
 # --- My Imports ---
-from src.db_approach.db_generation import Deck, get_next_seed
-from src.db_approach.db_helpers import debugger, string_to_binary
-from src.config import DB_PATH, BATCH_SIZE, DATA_FOLDER
+from .db_generation import Deck, get_next_seed
+from .db_helpers import debugger, string_to_binary
+from .config import DB_PATH, BATCH_SIZE, DATA_FOLDER
 
 
 def setup_database() -> None:

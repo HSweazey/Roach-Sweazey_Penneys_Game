@@ -2,7 +2,6 @@ import os
 import numpy as np
 import pandas as pd
 import sqlite3
-# Import shared logic from the new file
 from .game_logic import all_patterns, str_to_bits, play_through_deck
 
 def init_temp_db(db_path: str, pattern_len: int, seed_csv_path: str) -> sqlite3.Connection:

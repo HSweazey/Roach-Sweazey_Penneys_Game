@@ -14,7 +14,9 @@ MD_SUMMARY_FILE = 'Scoring.md'
 # ==============================================================================
 
 def main():
-    """Main function to orchestrate the test runs and output generation."""
+    """
+    Main function to test runs and output generation.
+    """
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     if not os.path.isdir(INPUT_DECK_FOLDER):
         print(f"❌ ERROR: Input folder not found at '{INPUT_DECK_FOLDER}'")

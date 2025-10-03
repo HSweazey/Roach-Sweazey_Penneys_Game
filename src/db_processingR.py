@@ -2,7 +2,6 @@ import os
 import numpy as np
 import pandas as pd
 from itertools import product
-# Import shared logic from the new file
 from .game_logic import all_patterns, str_to_bits, play_through_deck
 
 def init_aggregate_df(pattern_len: int, out_path: str) -> pd.DataFrame:
