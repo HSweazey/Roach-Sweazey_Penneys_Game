@@ -9,7 +9,7 @@ Our second scoring method similarly processes the decks stored in the generated 
 
 
 ## Testing
-To test our code, we used 10-200 randomly selected decks (currently set at 200) to play each possible iteration of Penny’s Game. Eventually, we will track what files and decks have been used so there is absolutely no repetition, but we simply wanted to make sure our pipeline was working. It uses both approaches on the same sample, run’s the computations as specified in the above sections, and updates each .csv. It also keeps track of similar statistics we used during the generation phase for the purpose of comparing the two approaches. Specifically we look at how many decks were processed, peak memory, wall time (total elapsed time), and CPU time (time when CPU is actively executing instructions in the program).
+To test our code, we used 10-200 randomly selected decks (currently set at 200) to play each possible iteration of Penny’s Game. Eventually, we will track what files and decks have been used so there is absolutely no repetition, but we simply wanted to make sure our pipeline was working. It uses both approaches on the same sample, run’s the computations as specified in the above sections, and updates each .csv. It also keeps track of similar statistics we used during the generation phase for the purpose of comparing the two approaches. Specifically we look at how many decks were processed, peak memory, wall time (total elapsed time), and CPU time (time when CPU is actively executing instructions in the program). The csvs for are located in the /data/comparisons/ folder.
 
 
 ## Selection and Reasoning 
