@@ -2,15 +2,11 @@ from itertools import product
 from typing import List, Tuple
 
 def all_patterns(length: int) -> List[str]:
-    """
-    Return list of all binary patterns as strings ('000')
-    """
+    """Return list of all binary patterns as strings e.g. '000'."""
     return [''.join(bits) for bits in product('01', repeat=length)]
 
 def str_to_bits(s: str) -> List[int]:
-    """
-    Convert binary string to a list of integers.
-    """
+    """Convert a binary string to a list of integers."""
     return [1 if ch == '1' else 0 for ch in s]
 
 def match_pattern(deck: List[int], pattern: List[int]) -> int:

@@ -5,7 +5,7 @@ import re
 from typing import Dict, List, Optional
 
 # Import constants
-from .config import DEFAULT_COMPOSITION, DATA_FOLDER
+from .config import DEFAULT_COMPOSITION, DATA_SCORED_FOLDER, DATA_UNSCORED_FOLDER
 
 class Deck:
     """
@@ -41,23 +41,29 @@ class Deck:
     def __str__(self) -> str:
         return f"Deck with {len(self)} cards. Top card: {self.cards[0] if self.cards else 'N/A'}"
 
-def get_next_seed(data_folder=DATA_FOLDER) -> int:
+def get_next_seed(data_unscored=DATA_UNSCORED_FOLDER, data_scored=DATA_SCORED_FOLDER) -> int:
     """
-    Finds the last used seed from specific file naming convention.
+    Finds the last used seed by searching for the highest seed number
+    in both the unscored and scored data folders.
     """
     filename_pattern = re.compile(r'^decks_\d+_seed(\d+)\.npy$')
     last_seed = 0
+    folders_to_check = [data_unscored, data_scored]
 
-    if not os.path.isdir(data_folder):
-        print(f"Warning: Directory '{data_folder}' not found. Defaulting to seed 1.")
-        # Create the directory if it doesn't exist to prevent errors later
-        os.makedirs(data_folder, exist_ok=True)
-        return 1
+    # Loop through each specified folder
+    for folder in folders_to_check:
+        if not os.path.isdir(folder):
+            print(f"Warning: Directory '{folder}' not found. Skipping.")
+            continue
 
-    for filename in os.listdir(data_folder):
-        match = filename_pattern.match(filename)
-        if match:
-            seed = int(match.group(1))
-            if seed > last_seed:
-                last_seed = seed
+        # Check every file in the current folder
+        for filename in os.listdir(folder):
+            match = filename_pattern.match(filename)
+            if match:
+                seed = int(match.group(1))
+                # Update last_seed if the current file's seed is higher
+                if seed > last_seed:
+                    last_seed = seed
+                    
+    # If no files were found, last_seed remains 0, so this returns 1.
     return last_seed + 1

@@ -1,3 +1,0 @@
-approach,wall_time_seconds,cpu_time_seconds,peak_memory_mb,num_decks_processed
-Approach 1 (pandas_in_memory),7.357764124986716,7.351653824,0.06512165069580078,200
-Approach 2 (sqlite_temp_db),0.7408757080556825,0.7396520959999986,0.020111083984375,200

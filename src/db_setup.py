@@ -8,9 +8,9 @@ import numpy as np
 import psutil
 
 # --- My Imports ---
-from .db_generation import Deck, get_next_seed
-from .db_helpers import debugger, string_to_binary
-from .config import DB_PATH, BATCH_SIZE, DATA_FOLDER
+from src.db_generation import Deck, get_next_seed
+from src.db_helpers import debugger, string_to_binary
+from src.config import DB_PATH, BATCH_SIZE, DATA_UNSCORED_FOLDER
 
 
 def setup_database() -> None:
@@ -112,7 +112,7 @@ def export_decks_and_clear_db(batch_size: int = BATCH_SIZE) -> None:
             numpy_array = np.array(decks_as_lists, dtype=np.int8)
 
             cumulative_count += len(results)
-            filename = os.path.join(DATA_FOLDER, f"decks_{cumulative_count}_seed{seed}.npy")
+            filename = os.path.join(DATA_UNSCORED_FOLDER, f"decks_{batch_size}_seed{seed}.npy")
             np.save(filename, numpy_array)
  
             offset += batch_size
