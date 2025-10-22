@@ -16,9 +16,8 @@ os.makedirs(FIGURES_DIR, exist_ok=True)
 def load_scores(csv_path: str = RESULTS_CSV) -> pd.DataFrame:
     '''
     Load precomputed scoring results CSV into pandas DataFrame.
-    ...
     '''
-    # This function is now correct and defaults to RESULTS_CSV
+    
     if not os.path.exists(csv_path):
         raise FileNotFoundError(f"Results CSV not found at {csv_path}. Please run scoring first.")
         
@@ -30,7 +29,6 @@ def load_scores(csv_path: str = RESULTS_CSV) -> pd.DataFrame:
 def patterns_ordered(pattern_len: int = PATTERN_LEN) -> List[str]:
     '''
     Return ordered list of binary patterns as strings in binary counting order
-    ...
     '''
     return all_patterns(pattern_len)
 
@@ -116,16 +114,15 @@ def plot_heatmap(win_matrix: np.ndarray, draw_matrix: np.ndarray, patterns: List
     plt.close(fig)
 
 
-# --- FIX: This line is updated ---
+
 def generate_heatmaps(csv_path: str = RESULTS_CSV, out_dir: str = FIGURES_DIR):
-# --- End Fix ---
     '''
     Generate both tricks and cards heatmaps from CSV scores.
     Returns paths to saved images.
     '''
     df = load_scores(csv_path)
     
-    # Get binary patterns
+    # Get patterns
     patterns_binary = patterns_ordered()
     
     # Create R/B patterns for labels

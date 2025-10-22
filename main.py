@@ -1,21 +1,19 @@
 import os
 import numpy as np
 
-# Import the core functions from your project's modules
 from src.db_setup import setup_database, insert_decks, export_decks_and_clear_db
 from src.db_processing import init_temp_db, process_single_batch_array_db, export_db_to_csv
 from src.config import *
-from src.heatmap import * # This imports generate_heatmaps
+from src.heatmap import * 
 
 def augment_data(n:int):
     """Runs a simple test of the generation and scoring pipeline."""
     os.makedirs(DATA_UNSCORED_FOLDER, exist_ok=True)
     os.makedirs(DATA_SCORED_FOLDER, exist_ok=True)
     os.makedirs(RESULTS_DIR, exist_ok=True)
-    # <<< NEW >>> Also ensure FIGURES_DIR exists
     os.makedirs(FIGURES_DIR, exist_ok=True) 
 
-    # --- STAGE 1: DECK GENERATION ---
+    # Deck generation
     print("--- STAGE 1: Generating Decks ---")
     setup_database()
     insert_decks(n)
@@ -23,7 +21,7 @@ def augment_data(n:int):
     print(f"✅ Generation complete. {n} decks saved to .npy files.")
 
     if SCORE_FLAG == True:
-        # --- STAGE 2: SCORING ---
+        # Scoring
         print("\n--- STAGE 2: Scoring Decks ---")
         all_unscored_files = [os.path.join(DATA_UNSCORED_FOLDER, f) for f in os.listdir(DATA_UNSCORED_FOLDER) if f.endswith('.npy')]
         if not all_unscored_files:
@@ -59,10 +57,9 @@ def augment_data(n:int):
             os.rename(file_path, destination_path)
         print("✅ All scored decks moved.")
 
-        # --- STAGE 4: UPDATING HEATMAPS ---
+        # Heatmaps
         print("\n--- STAGE 4: Generating Heatmaps ---")
         try:
-            # Call the heatmap function, which will use the default RESULTS_CSV path
             generate_heatmaps()
         except FileNotFoundError as e:
             print(f"❌ ERROR: Could not generate heatmaps. {e}")
