@@ -4,7 +4,6 @@ import random
 import re
 from typing import Dict, List, Optional
 
-# Import constants
 from .config import DEFAULT_COMPOSITION, DATA_SCORED_FOLDER, DATA_UNSCORED_FOLDER
 
 class Deck:
