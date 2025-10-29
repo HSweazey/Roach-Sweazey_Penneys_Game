@@ -10,28 +10,23 @@ from src.db_generation import Deck, get_next_seed
 from src.db_processing import init_temp_db, process_single_batch_array_db, export_db_to_csv
 from src.config import *
 
-os.makedirs(FIGURES_DIR, exist_ok=True)
-
+os.makedirs(FIGURES_DIR, exist_ok = True)
 
 def load_scores(csv_path: str = RESULTS_CSV) -> pd.DataFrame:
     '''
     Load precomputed scoring results CSV into pandas DataFrame.
     '''
-    
     if not os.path.exists(csv_path):
         raise FileNotFoundError(f"Results CSV not found at {csv_path}. Please run scoring first.")
-        
     df = pd.read_csv(csv_path, dtype={'p1': str, 'p2': str})
     print(f"[load_scores] Loaded {len(df)} rows from {csv_path}")
     return df
-
 
 def patterns_ordered(pattern_len: int = PATTERN_LEN) -> List[str]:
     '''
     Return ordered list of binary patterns as strings in binary counting order
     '''
     return all_patterns(pattern_len)
-
 
 def make_matrix(df: pd.DataFrame, metric: str = 'tricks') -> Tuple[np.ndarray, np.ndarray]:
     '''
@@ -41,17 +36,17 @@ def make_matrix(df: pd.DataFrame, metric: str = 'tricks') -> Tuple[np.ndarray, n
     patterns = patterns_ordered()
     n = len(patterns)
     idx = {pat: i for i, pat in enumerate(patterns)}
-
+    
     win_matrix = np.zeros((n, n), dtype=int)
     draw_matrix = np.zeros((n, n), dtype=int)
 
     if metric == 'tricks':
-        p1_col = 'p1_tricks'
-        p2_col = 'p2_tricks'
+        p1_col = 'p1_tricks_wins'
+        p2_col = 'p2_tricks_wins'
         draw_col = 'draw_tricks'
     elif metric == 'cards':
-        p1_col = 'p1_cards'
-        p2_col = 'p2_cards'
+        p1_col = 'p1_cards_wins'
+        p2_col = 'p2_cards_wins'
         draw_col = 'draw_cards'
     else:
         raise ValueError('metric must be either "tricks" or "cards"')
@@ -74,12 +69,10 @@ def make_matrix(df: pd.DataFrame, metric: str = 'tricks') -> Tuple[np.ndarray, n
 
     return win_matrix, draw_matrix
 
-
 def plot_heatmap(win_matrix: np.ndarray, draw_matrix: np.ndarray, patterns: List[str],
                  title: str, out_path: str):
     '''
     Plot a heatmap with annotations "win(draw)" in integer percents.
-    ...
     '''
     n = len(patterns)
     fig, ax = plt.subplots(figsize=(max(6, n), max(6, n)))
@@ -93,7 +86,6 @@ def plot_heatmap(win_matrix: np.ndarray, draw_matrix: np.ndarray, patterns: List
     ax.set_ylabel('Opponent Choice')
     ax.set_title(title)
 
-    # annotations
     for i in range(n):
         for j in range(n):
             txt = f"{int(win_matrix[i,j])}({int(draw_matrix[i,j])})"
@@ -113,29 +105,20 @@ def plot_heatmap(win_matrix: np.ndarray, draw_matrix: np.ndarray, patterns: List
     plt.savefig(out_path, dpi=200)
     plt.close(fig)
 
-
-
 def generate_heatmaps(csv_path: str = RESULTS_CSV, out_dir: str = FIGURES_DIR):
     '''
     Generate both tricks and cards heatmaps from CSV scores.
     Returns paths to saved images.
     '''
     df = load_scores(csv_path)
-    
-    # Get patterns
     patterns_binary = patterns_ordered()
-    
-    # Create R/B patterns for labels
     patterns_rb = [p.replace('0', 'B').replace('1', 'R') for p in patterns_binary]
-    
     sample_size = int(df['games_count'].max()) if 'games_count' in df.columns else 0
 
     win_tricks, draw_tricks = make_matrix(df, metric='tricks')
     win_cards, draw_cards = make_matrix(df, metric='cards')
-
     tricks_title = f"Win% (Draw%) by Tricks - Sample Size {sample_size}"
     cards_title = f"Win% (Draw%) by Cards - Sample Size {sample_size}"
-
     tricks_path = os.path.join(out_dir, f"heatmap_tricks.png")
     cards_path = os.path.join(out_dir, f"heatmap_cards.png")
 
@@ -150,8 +133,6 @@ def heatmap_augment_data(n: int):
     create n new decks 
     automatically update all scores and figures 
     '''
-
-    # generate new decks 
     seed = get_next_seed()
     np.random.seed(seed)
     decks = np.zeros((n, DECK_LEN), dtype = int)
@@ -163,11 +144,8 @@ def heatmap_augment_data(n: int):
     batch_path = os.path.join(DATA_SCORED_FOLDER, f'decks_{n}_seed{seed}.npy')
     np.save(batch_path, decks)
 
-    # initialize or update scores database then export 
     conn = init_temp_db(DB_PATH, pattern_len = PATTERN_LEN, seed_csv_path = RESULTS_CSV)
     process_single_batch_array_db(decks, conn, pattern_len = PATTERN_LEN)
     export_db_to_csv(conn, RESULTS_CSV)
     conn.close()
-
-    # regenerate heatmaps 
     generate_heatmaps(RESULTS_CSV)
